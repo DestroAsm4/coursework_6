@@ -10,7 +10,7 @@ from rest_framework.viewsets import ModelViewSet
 
 
 from .models import Ad, Comment
-from .serializers import AdSerializer, CommentSerializer, AdListSerializer
+from .serializers import AdSerializer, CommentSerializer, AdListSerializer, AdCreateSerializer
 
 TOTAL_ON_PAGE = 10
 
@@ -22,8 +22,10 @@ class AdListView(ListView):
 
 class AdViewSet(ModelViewSet):
     queryset = Ad.objects.all()
+    # serializer_class = AdSerializer
+
     serializers = {
-        # "create": SelectionCreateSerializer
+            'create': AdCreateSerializer
     }
     default_serializer = AdSerializer
 

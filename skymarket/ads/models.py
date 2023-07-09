@@ -7,8 +7,8 @@ class Ad(models.Model):
     title = models.CharField(max_length=40)
     price = models.IntegerField()
     description = models.CharField(max_length=500)
-    author = models.CharField(max_length=30)
-    created_at = models.DateTimeField()
+    author = models.ForeignKey('user', on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='Ad_image', blank=True, null=True)
 
     class Meta:
@@ -22,7 +22,7 @@ class Ad(models.Model):
 class Comment(models.Model):
     # TODO добавьте поля модели здесь
     text = models.CharField(max_length=350)
-    author = models.CharField(max_length=50)
+    author = models.ForeignKey('user', on_delete=models.CASCADE)
     ad = models.ForeignKey('ad', on_delete=models.CASCADE)
     created_at = models.DateTimeField()
 

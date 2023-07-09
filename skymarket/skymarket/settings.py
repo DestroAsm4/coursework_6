@@ -43,12 +43,11 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "corsheaders",
     "rest_framework",
-    "djoser",
     'rest_framework_simplejwt',
-    "users",
+    'users',
     "ads",
+    "djoser",
     "redoc",
 
 
@@ -182,7 +181,11 @@ SIMPLE_JWT = {
 DJOSER = {
     'SERIALIZERS': {
         'user_create': 'users.serializers.UserRegistrationSerializer',
-        'current_user': 'users.serializers.CurrentUserSerializer'
+        'current_user': 'users.serializers.CurrentUserSerializer',
+        'list_user': 'users.serializers.ListUserSerializer',
+        'password_reset': 'djoser.serializers.SendEmailResetSerializer',
+        'password_reset_confirm': 'djoser.serializers.PasswordResetConfirmSerializer',
+        'set_password': 'djoser.serializers.SetPasswordSerializer',
     },
     'LOGIN_FIELD': 'email',
     'PASSWORD_RESET_CONFIRM_URL': 'password/reset/confirm/{uid}/{token}',

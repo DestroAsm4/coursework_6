@@ -9,8 +9,9 @@ from .views import AdListView, AdViewSet
 # ]
 router = routers.SimpleRouter()
 router.register(
-    '',
+    'ads',
     AdViewSet,
+    basename='ads'
 
 )
 # router.register(

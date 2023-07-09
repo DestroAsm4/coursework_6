@@ -32,13 +32,11 @@ class User(AbstractBaseUser):
     email = models.CharField(max_length=40, unique=True)
     role = models.CharField(max_length=9, choices=UserRoles.choices, default=UserRoles.USER )
     image = models.ImageField(upload_to='avatar_image', blank=True, null=True)
-    password = models.CharField(max_length=100)
-    last_login = models.DateTimeField()
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=True)
 
-    def save(self, *args, **kwargs):
-        self.set_password(raw_password=self.password)
-        super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self.set_password(raw_password=self.password)
+    #     super().save(*args, **kwargs)
 
     class Meta:
         verbose_name = 'Пользователь'
@@ -46,6 +44,8 @@ class User(AbstractBaseUser):
 
     def __str__(self):
         return self.first_name
+
+
 
     @property
     def is_superuser(self):
@@ -61,10 +61,16 @@ class User(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return self.is_admin
 
-    @property
-    def is_admin(self, app_label):
-        return self.role == UserRoles.ADMIN
+
 
     # также для работы модели пользователя должен быть переопределен
     # менеджер объектов
     objects = UserManager()
+
+    @property
+    def is_admin(self):
+        return self.role == UserRoles.ADMIN
+
+    @property
+    def is_user(self):
+        return self.role == UserRoles.USER

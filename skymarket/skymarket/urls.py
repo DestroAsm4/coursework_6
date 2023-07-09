@@ -22,7 +22,7 @@ urlpatterns = [
     path("api/admin/", admin.site.urls),
     path("api/redoc-tasks/", include("redoc.urls")),
     path('api/', include('users.urls')),
-    path('api/ads/', include('ads.urls')),
+    path('api/', include('ads.urls')),
 
 
 ]
