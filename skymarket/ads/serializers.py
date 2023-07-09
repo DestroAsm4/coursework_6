@@ -5,7 +5,7 @@ from rest_framework.serializers import ModelSerializer
 from .models import Ad, Comment
 from ..users.models import User
 
-from ..users.serializers import ListUserSerializer
+# from users.serializers import ListUserSerializer
 
 
 # from users.serializers import ListUserSerializer
@@ -42,7 +42,7 @@ class AdListSerializer(ModelSerializer):
 
 class AdCreateSerializer(ModelSerializer):
 
-    author = ListUserSerializer()
+    # author = ListUserSerializer()
 
     first_name = SlugRelatedField(slug_field='user.first_name', queryset=User.objects.all())
 
