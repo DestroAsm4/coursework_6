@@ -14,7 +14,11 @@ import os
 import datetime
 from pathlib import Path
 
+import django
 from dotenv import load_dotenv
+
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'skymarket.settings')
+
 
 load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -45,8 +49,8 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     'rest_framework_simplejwt',
-    'users',
     "ads",
+    'users',
     "djoser",
     "redoc",
 
@@ -194,3 +198,4 @@ DJOSER = {
     }
 }
 AUTH_USER_MODEL = 'users.User'
+

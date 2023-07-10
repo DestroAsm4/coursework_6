@@ -10,11 +10,7 @@ User = get_user_model()
 # TODO для создания пользователя из за того, что у нас имеются нестандартные поля
 
 
-class ListUserSerializer(UserSerializer):
 
-    class Meta:
-        model = User
-        fields = ['first_name', 'last_name', 'phone', "role", "email"]
 
 class UserRegistrationSerializer(BaseUserRegistrationSerializer):
 
@@ -35,8 +31,3 @@ class CurrentUserSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
 
-# class UserSerializer(ModelSerializer):
-#
-#     class Meta:
-#         model = User
-#         fields = '__all__'

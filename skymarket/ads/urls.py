@@ -1,7 +1,7 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from .views import AdListView, AdViewSet
+from .views import AdListView, AdViewSet, CommentViewSet
 
 # TODO настройка роутов для модели
 # urlpatterns = [
@@ -14,9 +14,11 @@ router.register(
     basename='ads'
 
 )
-# router.register(
-#     r'comments',
-#     CommentViewSet,
-#
-# )
 urlpatterns = router.urls
+router.register(
+    r'comments',
+    CommentViewSet,
+    'comments'
+
+)
+urlpatterns += router.urls

@@ -43,9 +43,15 @@ class User(AbstractBaseUser):
         verbose_name_plural = 'Пользователи'
 
     def __str__(self):
-        return self.first_name
+        return str(self.pk)
 
-
+    def serialize(self):
+        return {
+            'phone': self.phone,
+            'author_first_name': self.first_name,
+            'author_last_name': self.last_name,
+            'author_id': self.pk
+        }
 
     @property
     def is_superuser(self):

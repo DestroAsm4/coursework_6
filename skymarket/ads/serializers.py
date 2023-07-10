@@ -1,9 +1,13 @@
+from djoser.serializers import UserSerializer
 from rest_framework import serializers
 from rest_framework.relations import SlugRelatedField
 from rest_framework.serializers import ModelSerializer
 
 from .models import Ad, Comment
-from ..users.models import User
+from users.models import User
+
+from users.serializers import CurrentUserSerializer
+
 
 # from users.serializers import ListUserSerializer
 
@@ -15,6 +19,8 @@ from ..users.models import User
 
 class CommentSerializer(serializers.ModelSerializer):
     # TODO сериалайзер для модели
+    author = SlugRelatedField(slug_field='id', queryset=User.objects.all())
+
     class Meta:
         model = Comment
         fields = '__all__'
@@ -40,16 +46,41 @@ class AdListSerializer(ModelSerializer):
         model = Ad
         fields = '__all__'
 
+class UserAdSerializer(ModelSerializer):
+
+    author = CurrentUserSerializer()
+    class Meta:
+        model = User
+        fields = ['phone']
+
 class AdCreateSerializer(ModelSerializer):
 
-    # author = ListUserSerializer()
+    # author = UserAdSerializer(read_only=True)
+    author = SlugRelatedField(slug_field='id', queryset=User.objects.all())
+    # phone = author.
+    # user = UserSerializer()
+    # author = user
 
-    first_name = SlugRelatedField(slug_field='user.first_name', queryset=User.objects.all())
+    # def create(self, validated_data):
+    #     author = self.context['request'].ad
+    #     ad = Ad.objects.create(
+    #         author=,
+    #         **validated_data
+    #     )
+    #     return comment
+
 
 
     class Meta:
         model = Ad
-        fields = ['pk', 'image', 'title', 'price', 'phone', 'description', 'author_first_name', 'author_last_name', 'author_id']
+        fields = ['pk', 'image', 'title', 'price', 'author']
 
+#  'phone', 'description', 'author_first_name', 'author_last_name', 'author_id'
+
+class ListUserSerializer(UserSerializer):
+
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'phone', "role", "email"]
 
 
