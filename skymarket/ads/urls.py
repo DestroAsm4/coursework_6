@@ -19,7 +19,7 @@ urlpatterns = router.urls
 
 
 
-urlpatterns += ad_router.urls
+
 # router.register(
 #     r'comments',
 #     CommentViewSet,
