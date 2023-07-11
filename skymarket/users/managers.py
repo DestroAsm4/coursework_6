@@ -21,11 +21,8 @@ class UserManager(BaseUserManager):
             role=role
         )
         user.is_active = True
-        print(password)
         user.set_password(password)
-        print(self._db)
         user.save(self._db)
-
         return user
 
     def create_superuser(self, email, first_name, last_name, phone, password=None, role='admin'):

@@ -15,10 +15,14 @@ router.register(
 
 )
 urlpatterns = router.urls
-router.register(
-    r'comments',
-    CommentViewSet,
-    'comments'
 
-)
-urlpatterns += router.urls
+
+
+
+urlpatterns += ad_router.urls
+# router.register(
+#     r'comments',
+#     CommentViewSet,
+#     'comments'
+#
+# )

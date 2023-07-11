@@ -184,9 +184,9 @@ SIMPLE_JWT = {
 
 DJOSER = {
     'SERIALIZERS': {
+        'user': 'users.serializers.ListUserSerializer',
         'user_create': 'users.serializers.UserRegistrationSerializer',
         'current_user': 'users.serializers.CurrentUserSerializer',
-        'list_user': 'users.serializers.ListUserSerializer',
         'password_reset': 'djoser.serializers.SendEmailResetSerializer',
         'password_reset_confirm': 'djoser.serializers.PasswordResetConfirmSerializer',
         'set_password': 'djoser.serializers.SetPasswordSerializer',

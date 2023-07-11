@@ -9,11 +9,12 @@ class Ad(models.Model):
     title = models.CharField(max_length=40)
     price = models.IntegerField()
     description = models.CharField(max_length=500)
-    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    author = models.ForeignKey('users.User', on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     image = models.ImageField(upload_to='Ad_image/', blank=True, null=True)
 
     class Meta:
+        ordering = ['id']
         verbose_name = 'Объявление'
         verbose_name_plural = 'Объявления'
 
@@ -30,7 +31,6 @@ class Ad(models.Model):
     def __str__(self):
         return self.title
 
-print(settings.AUTH_USER_MODEL)
 class Comment(models.Model):
     # TODO добавьте поля модели здесь
     text = models.CharField(max_length=350)
@@ -51,6 +51,7 @@ class Comment(models.Model):
         }
 
     class Meta:
+        ordering = ['id']
         verbose_name = 'Коментарий'
         verbose_name_plural = 'Коментарии'
 

@@ -7,6 +7,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
+from rest_framework.utils import json
 from rest_framework.viewsets import ModelViewSet
 from .permissions import IsOwner, IsStaff
 
@@ -103,10 +104,18 @@ class AdViewSet(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         request.data['author'] = request.user.pk
+        # image = request.data['image']
+        # if not request.data['image']:
+        #     request.data.pop('image')
         result = super().create(request, *args, **kwargs)
+        # if request.data['image']:
+        # else:
+        #     request.data['image'] = ''
+        # print(request.data['image'])
+        print(result.data)
         response = {
             "pk": result.data['pk'],
-            "image": request.data['image'],
+            "image": result.data['image'],
             "title": request.data['title'],
             "price": request.data['price'],
             "phone": request.user.phone,
@@ -122,15 +131,23 @@ class AdViewSet(ModelViewSet):
     def me(self, request, *args, **kwargs):
 
         ads = Ad.objects.filter(author_id=request.user.pk)
-        print([ad.serialize() for ad in ads])
+        results = [ad.serialize() for ad in ads]
 
-        return Response([ad.serialize() for ad in ads])
-        # return Response({'status': 'OK'})
+        page = self.paginate_queryset(results)
+        print(page)
+        if page is not None:
+            # serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(page)
+
+        return Response(results)
+
     @action(methods=['GET'], detail=True)
     def comments(self, request, pk=None, *args, **kwargs):
         results = []
-
         comments = Comment.objects.filter(ad_id=pk)
+
+
+
         for comment in comments:
             user = User.objects.get(pk=int(comment.serialize()['author']))
 
@@ -147,7 +164,103 @@ class AdViewSet(ModelViewSet):
             results.append(result)
 
 
+        page = self.paginate_queryset(results)
+        if page is not None:
+            # serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(results)
+
+        # serializer = self.get_serializer(results, many=True)
         return Response(results)
+
+    @action(methods=['GET', 'PATCH', 'DELETE', 'POST'], detail=True, url_path='comments/(?P<comment_id>[^/.]+)')
+    def comments_get_id(self, request, comment_id, pk=None, *args, **kwargs):
+
+        if request.method == 'POST':
+            comment = Comment()
+            user = request.user
+            comment.text = request.data['text']
+            res = comment.save()
+            print(res)
+            result = {
+                'pk': comment.pk,
+                'text': comment.text,
+                'author_id': user.pk,
+                'created_at': comment.created_at,
+                "author_first_name": user.first_name,
+                "author_last_name": user.last_name,
+                "ad_id": comment.ad.pk,
+                "author_image": user.image.name
+            }
+
+            return Response(result)
+
+
+
+        if request.method == 'GET':
+            comment = Comment.objects.get(pk=comment_id)
+            user = User.objects.get(pk=int(comment.serialize()['author']))
+            result = {
+                'pk': comment.pk,
+                'text': comment.text,
+                'author_id': user.pk,
+                'created_at': comment.created_at,
+                "author_first_name": user.first_name,
+                "author_last_name": user.last_name,
+                "ad_id": comment.ad.pk,
+                "author_image": user.image.name
+            }
+
+            return Response(result)
+
+        if request.method == 'PATCH':
+
+            data = request.data
+            comment = Comment.objects.get(pk=comment_id)
+            user = User.objects.get(pk=int(comment.serialize()['author']))
+            comment.text = data['text']
+            comment.save()
+
+            result = {
+                'pk': comment.pk,
+                'text': comment.text,
+                'author_id': user.pk,
+                'created_at': comment.created_at,
+                "author_first_name": user.first_name,
+                "author_last_name": user.last_name,
+                "ad_id": comment.ad.pk,
+                "author_image": user.image.name
+            }
+
+            return Response(result)
+
+
+        if request.method == 'DELETE':
+            comment = Comment.objects.get(pk=comment_id)
+            comment.delete()
+            return Response()
+
+
+
+    # @action(methods=['PATCH'], detail=True, url_path='comments/(?P<comment_id>[^/.]+)')
+    # def comments_update_id(self, request, comment_id, pk=None, *args, **kwargs):
+    #     super().post(request, *args, **kwargs)
+    #     data = json.loads(request.body)
+    #     self.object.name = data.get('text')
+    #     self.object.save()
+    #     comment = Comment.objects.get(pk=comment_id)
+    #     user = User.objects.get(pk=int(comment.serialize()['author']))
+    #     result = {
+    #         'pk': comment.pk,
+    #         'text': comment.text,
+    #         'author_id': user.pk,
+    #         'created_at': comment.created_at,
+    #         "author_first_name": user.first_name,
+    #         "author_last_name": user.last_name,
+    #         "ad_id": comment.ad.pk,
+    #         "author_image": user.image.name
+    #     }
+
+        # return Response(result)
     # permissions = {
     #     # 'list': [IsAuthenticated],
     #     'retrieve': [IsAuthenticated],
@@ -157,8 +270,10 @@ class AdViewSet(ModelViewSet):
     #     'partial_update': [IsOwner]
 
     # }
-#
-#
+
+class UserAdsListAPIView(A)
+
+
 class CommentViewSet(ModelViewSet):
     queryset = Comment.objects.all()
     serializers = {

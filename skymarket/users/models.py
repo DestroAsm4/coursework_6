@@ -39,6 +39,7 @@ class User(AbstractBaseUser):
     #     super().save(*args, **kwargs)
 
     class Meta:
+        ordering = ['id']
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
@@ -48,8 +49,11 @@ class User(AbstractBaseUser):
     def serialize(self):
         return {
             'phone': self.phone,
-            'author_first_name': self.first_name,
-            'author_last_name': self.last_name,
+            'first_name': self.first_name,
+            'last_name': self.last_name,
+            'password': self.password,
+            'email': self.email,
+            'image': self.image.name,
             'author_id': self.pk
         }
 
